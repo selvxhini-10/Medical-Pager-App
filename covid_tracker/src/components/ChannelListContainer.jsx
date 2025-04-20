@@ -5,7 +5,9 @@ import { ChannelSearch, TeamChannelList, TeamChannelPreview } from './index.js';
 import HospitalIcon from '../assets/hospital.png';
 import LogoutIcon from '../assets/logout.png';
 
-const Sidebar = () => (
+const cookies = new Cookies();
+
+const Sidebar = ({logout}) => (
   <div className="channel-list__sidebar">
     <div className="channel-list__sidebar__icon1">
       <div className="icon1__inner">
@@ -13,7 +15,7 @@ const Sidebar = () => (
       </div>
     </div>
     <div className="channel-list__sidebar__icon2">
-      <div className="icon1__inner">
+      <div className="icon1__inner" onClick={logout}>
         <img src={LogoutIcon} alt="Logout" width="30" />
       </div>
     </div>
@@ -26,10 +28,21 @@ const CompanyHeader = () => (
 </div>
 );
 
-const ChannelListContainer = () => {
+const ChannelListContainer = ({isCreating, setIsCreating, setCreateType, setIsEditing}) => {
+  const logout = () => {
+    cookies.remove("token");
+    cookies.remove("userId");
+    cookies.remove("username");
+    cookies.remove("fullName");
+    cookies.remove("avatarURL");
+    cookies.remove("hashedPassword");
+    cookies.remove("phoneNumber");
+
+    window.location.reload();
+  }
   return (
     <>
-    <Sidebar />
+    <Sidebar logout={logout}/>
     <div className='channel-list__list__wrapper'>
       <CompanyHeader/>
       <ChannelSearch/>
@@ -40,6 +53,10 @@ const ChannelListContainer = () => {
             <TeamChannelList
               {... listProps}
               type="team"
+              isCreating={isCreating}
+              setIsCreating={setIsCreating}
+              setCreateType={setCreateType}
+              setIsEditing={setIsEditing}
             />
       )}
       Preview={(previewProps)=> (
@@ -55,6 +72,10 @@ const ChannelListContainer = () => {
             <TeamChannelList
               {... listProps}
               type="messaging"
+              isCreating={isCreating}
+              setIsCreating={setIsCreating}
+              setCreateType={setCreateType}
+              setIsEditing={setIsEditing}
             />
       )}
       Preview={(previewProps)=> (
