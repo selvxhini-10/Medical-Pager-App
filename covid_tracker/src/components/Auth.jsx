@@ -3,6 +3,7 @@ import Cookies from 'universal-cookie';
 import axios from 'axios';
 
 import signinImage from '../assets/signup.jpg';
+import { useNavigate } from 'react-router-dom';
 
 const cookies = new Cookies();
 
@@ -18,6 +19,7 @@ const initialState = {
 const Auth = () => {
     const [form, setForm] = useState(initialState);
     const [isSignup, setIsSignup] = useState(true);
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         //wrap name of specific object key in square brackets
@@ -58,7 +60,7 @@ const Auth = () => {
               const response = await axios.post(`${URL}/${isSignup ? 'signup' : 'login'}`, {
                 username,
                 password,
-                fullName: form.fullName,
+                fullName: form.fullName, //data from input linked to the signup
                 phoneNumber,
                 avatarURL,
               });
@@ -76,8 +78,8 @@ const Auth = () => {
                 cookies.set('avatarURL', avatarURL);
                 cookies.set('hashedPassword', hashedPassword);
               }
-          
-              window.location.reload();
+              navigate('/chat');
+              //window.location.reload();
             } catch (error) {
               alert("Login or signup failed. Please check your network or backend server.");
             }
